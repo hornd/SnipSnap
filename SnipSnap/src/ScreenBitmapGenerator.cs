@@ -40,12 +40,12 @@ namespace SnipSnap
     {
         public ScreenBitmapGenerator() { }
 
-        public Image GenerateDesktopBitmap()
+        public Image GetScreenImage()
         {
             return GetBitmapFromHandle(Win32ApiWrapper.GetDesktopWindow());
         }
 
-        public Image GenerateCurrentWindowBitmap()
+        public Image GetFocusedWindowImage()
         {
             return GetBitmapFromHandle(Win32ApiWrapper.GetForegroundWindow());
         }

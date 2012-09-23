@@ -2,6 +2,7 @@
 using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Windows.Forms;
 
 namespace SnipSnap
 {
@@ -9,12 +10,25 @@ namespace SnipSnap
     {
         static void Main(string[] args)
         {
-            CheckBase64();
+            //debug
+            KeyboardHook kb = new KeyboardHook();
+            kb.Start();
+
+            for (int i = 0; i < 99999; i++)
+            {
+                for (int j = 0; j < 99999; j++)
+                {
+                    ThreadMsgQueue<int>.Dequeue();
+                }
+            }
+
+
+            CheckBase64();            
         }
 
         static void CheckBase64()
         {
-            ScreenBitmapGenerator generator = new ScreenBitmapGenerator();
+            ScreenImageGenerator generator = new ScreenImageGenerator();
             Image m, n;
             string file, base64;
 
@@ -31,7 +45,7 @@ namespace SnipSnap
         {
             string file = Path.Combine(Environment.CurrentDirectory, "aaaaa.jpg");
 
-            ScreenBitmapGenerator generator = new ScreenBitmapGenerator();
+            ScreenImageGenerator generator = new ScreenImageGenerator();
             Image m = generator.GetFocusedWindowImage();
 
             m.Save(file, ImageFormat.Jpeg);

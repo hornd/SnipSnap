@@ -3,9 +3,9 @@ using System.Drawing;
 
 namespace SnipSnap
 {
-    public abstract class BitmapGenerator
+    public abstract class ImageGenerator
     {
-        public BitmapGenerator() { }
+        public ImageGenerator() { }
 
 
         protected virtual Image GetBitmapFromHandle(IntPtr handle)
@@ -36,9 +36,9 @@ namespace SnipSnap
         }
     }
 
-    public class ScreenBitmapGenerator : BitmapGenerator
+    public class ScreenImageGenerator : ImageGenerator
     {
-        public ScreenBitmapGenerator() { }
+        public ScreenImageGenerator() { }
 
         public Image GetScreenImage()
         {

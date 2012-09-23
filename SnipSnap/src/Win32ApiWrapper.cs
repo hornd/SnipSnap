@@ -100,6 +100,9 @@ namespace SnipSnap
         [DllImport("user32.dll", EntryPoint = "CallNextHookEx")]
         public static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
 
+        [DllImport("user32.dll", EntryPoint = "GetAsyncKeyState")]
+        public static extern Int16 GetAsyncKeyState(int vKey);
+
         [DllImport("kernel32.dll", EntryPoint = "GetModuleHandle")]
         public static extern IntPtr GetModuleHandle(string lpModuleName);
     }

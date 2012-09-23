@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
 
 namespace SnipSnap
@@ -10,13 +9,17 @@ namespace SnipSnap
 
         public static void Enqueue(T enq)
         {
+            Console.WriteLine("Enq");
             messages.Add(enq);
         }
 
         public static T Dequeue()
         {
+            Console.WriteLine("Deq");
             return messages.Take();            
         }
     }
 }
 
+// 0xa2 or 0xa3 - ctrl
+// 0x2d - ins

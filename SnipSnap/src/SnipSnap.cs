@@ -3,27 +3,28 @@ using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
+using System.Net;
 
 namespace SnipSnap
 {
     public class SnipSnap
     {
+        static void TestDequeueSave()
+        {
+            string file;
+
+            for (int i = 0; i < 15; i++)
+            {
+                file = Path.Combine(Environment.CurrentDirectory, "aaaa" + i + ".jpg");
+                ThreadMsgQueue<Image>.Dequeue().Save(file, ImageFormat.Jpeg);
+            }
+        }
+
         static void Main(string[] args)
         {
-            //debug
             KeyboardHook kb = new KeyboardHook();
-            kb.Start();
-
-            for (int i = 0; i < 99999; i++)
-            {
-                for (int j = 0; j < 99999; j++)
-                {
-                    ThreadMsgQueue<int>.Dequeue();
-                }
-            }
-
-
-            CheckBase64();            
+            kb.Hook();
+            //TestDequeueSave();          
         }
 
         static void CheckBase64()

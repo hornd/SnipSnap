@@ -2,24 +2,29 @@
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Threading;
+using System.Drawing;
 
 namespace SnipSnap
 {
     public class KeyboardHook
     {
-        private Thread hookThread = null;
-        IntPtr hook = IntPtr.Zero;
+        private Thread hookThread;
+        private IntPtr hook;
+        private Win32ApiWrapper.HookIn callback;
 
-        Win32ApiWrapper.HookIn callback;
+        private ScreenImageGenerator generator;
 
         public KeyboardHook() 
         {
+            this.hookThread = null;
+            this.hook = IntPtr.Zero;
             this.callback = new Win32ApiWrapper.HookIn(LowLevelKeyboardHook);
+            this.generator = new ScreenImageGenerator();
         }
 
         ~KeyboardHook() { Deregister(); }
 
-        public void Start()
+        public void Hook()
         {
             hookThread = new Thread(Register);
             hookThread.Priority = ThreadPriority.Highest;
@@ -29,14 +34,15 @@ namespace SnipSnap
         private IntPtr LowLevelKeyboardHook(int nCode, IntPtr wParam, IntPtr lParam)
         {
             WindowsMessage msg = (WindowsMessage)wParam;
+            bool cntrlPressed = (Win32ApiWrapper.GetAsyncKeyState((int)VirtualKeyCode.VK_CONTROL) & 0x8000) != 0;
 
             if (nCode >= 0 && msg == WindowsMessage.WM_KEYUP)
             {
-                int scanned = Marshal.ReadInt32(lParam);
-                Console.WriteLine("Scancode: 0x{0:x4}", scanned);
-
-                // Insert into queue
-                ThreadMsgQueue<int>.Enqueue(scanned);
+                KBDLLHook d = (KBDLLHook)Marshal.PtrToStructure(lParam, typeof(KBDLLHook));
+                if (d.vkCode == (int)VirtualKeyCode.VK_INSERT && cntrlPressed)
+                {
+                    ThreadMsgQueue<Image>.Enqueue(generator.GetFocusedWindowImage());
+                }
             }
 
             return Win32ApiWrapper.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
@@ -69,11 +75,19 @@ namespace SnipSnap
         [StructLayout(LayoutKind.Sequential)]
         public struct KBDLLHook
         {
-            UInt32 vkCode;
-            UInt32 scanCode;
-            UInt32 flags;
-            UInt32 time;
-            IntPtr dwExtraInfo;
+            public UInt32 vkCode;
+            public UInt32 scanCode;
+            public UInt32 flags;
+            public UInt32 time;
+            public IntPtr dwExtraInfo;
+
+            public override string ToString()
+            {
+                return "vkCode: " + vkCode + "\n" +
+                       "scanCode: " + scanCode + "\n" +
+                       "flags: " + flags + "\n" +
+                       "time: " + time + "\n";
+            }
         }
 
         private enum WindowsMessage : int

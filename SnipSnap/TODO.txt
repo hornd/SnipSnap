@@ -1,0 +1,3 @@
+﻿- Imgur posting
+- Force run in background
+- Run on startup

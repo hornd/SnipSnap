@@ -1,3 +1,1 @@
-﻿- Imgur posting
-- Force run in background
-- Run on startup
+﻿- Run in background and/or shove into system tray

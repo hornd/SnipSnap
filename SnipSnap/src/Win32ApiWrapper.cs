@@ -6,12 +6,6 @@ namespace SnipSnap
     // Provides access to some WINAPI functionality.
     public class Win32ApiWrapper
     {
-        public enum MetrixIndex : int
-        {
-            SM_CXSCREEN,
-            SM_CXYCREEN,
-        }
-
         public enum RasterOptions : int
         {
             SRC_COPY = 0x00CC0020,
@@ -35,10 +29,6 @@ namespace SnipSnap
 
         public delegate IntPtr HookIn(int nCode, IntPtr wParam, IntPtr lParam);
              
-        // Query the API for information about nIndex (MetrixIndex)
-        [DllImport("user32.dll", EntryPoint = "GetSystemMetrics")]
-        private static extern int GetSystemMetrics(MetrixIndex nIndex);
-
         // Get the rectangle associated witht he window hWnd.
         [DllImport("user32.dll", EntryPoint = "GetWindowRect")]
         public static extern IntPtr GetWindowRect(IntPtr hWnd, ref Rect rect);
@@ -50,10 +40,6 @@ namespace SnipSnap
         // Query the API for a handle to the desktop window
         [DllImport("user32.dll", EntryPoint = "GetDesktopWindow")]
         public static extern IntPtr GetDesktopWindow();
-
-        // Retrieve the device context for the referenced pointer.
-        [DllImport("user32.dll", EntryPoint = "GetDC")]
-        public static extern IntPtr GetDC(IntPtr hWnd);
 
         // Retrieve the device context for the referenced pointer.
         [DllImport("user32.dll", EntryPoint = "GetWindowDC")]
@@ -100,9 +86,11 @@ namespace SnipSnap
         [DllImport("user32.dll", EntryPoint = "CallNextHookEx")]
         public static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
 
+        // Returns the state of vKey when function is called.
         [DllImport("user32.dll", EntryPoint = "GetAsyncKeyState")]
         public static extern Int16 GetAsyncKeyState(int vKey);
 
+        // Returns handle to module lpModuleName
         [DllImport("kernel32.dll", EntryPoint = "GetModuleHandle")]
         public static extern IntPtr GetModuleHandle(string lpModuleName);
     }

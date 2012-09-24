@@ -7,7 +7,6 @@ namespace SnipSnap
     {
         public ImageGenerator() { }
 
-
         protected virtual Image GetBitmapFromHandle(IntPtr handle)
         {
             Image ret;
